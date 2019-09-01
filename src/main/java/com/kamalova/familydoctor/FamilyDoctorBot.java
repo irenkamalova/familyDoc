@@ -30,7 +30,11 @@ public class FamilyDoctorBot extends TelegramLongPollingBot {
 
     private void initData() {
         try {
-            recipientList.addAll(readLines(chatIds, Charset.defaultCharset()));
+            if (!chatIds.exists()) {
+                chatIds.createNewFile();
+            } else {
+                recipientList.addAll(readLines(chatIds, Charset.defaultCharset()));
+            }
         } catch (IOException e) {
             System.out.println("Failed to init data");
             e.printStackTrace();
@@ -65,7 +69,7 @@ public class FamilyDoctorBot extends TelegramLongPollingBot {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         putData(chatId);
-        sendMessage.setText("Здесь будут напоминания");
+        sendMessage.setText("Chat id: " + chatId);
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
